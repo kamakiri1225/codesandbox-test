@@ -1,82 +1,104 @@
-/**
- * mapやfilterを使った配列
- */
+import "./styles.css";
 
-//map
+const onClickAdd = () => {
+  // テキストを取得
+  const inputText = document.getElementById("add-text").value;
+  document.getElementById("add-text").value = "";
 
-const nameArr = ["田中", "山田", "kamakiri"];
-// for (let i = 0; i < nameArr.length; i++) {
-//   console.log(`${i + 1}番目は${nameArr[i]}`);
-// }
+  creteIncompleteList(inputText);
+}
 
-// const nameArr2 = nameArr.map((name) => {
-//   return name;
-// });
+// 未完了リストに追加する関数
+const creteIncompleteList = (text) => {
+  // divタグの生成
+  const div = document.createElement("div");
+  div.className = "list-row";
 
-// console.log(nameArr2);
+  // liタグの生成
 
-// nameArr.map((name, i) => console.log(`${i + 1}番目は${nameArr[i]}`));
+  const li = document.createElement("li");
+  li.innerText = text
 
-// filter (条件式が書ける)
-// const numArr2 = [1, 2, 3, 4, 5, 6];
-// const newNumArr = numArr2.filter((num) => {
-//   return num % 2 === 1;
-// });
+  // divタグの子要素にliを設定
+  div.appendChild(li);
 
-// console.log(newNumArr);
+  //未完了のリストに追加
+  document.getElementById("imcomplete-list").appendChild(div);
 
-// const newNumArr3 = nameArr.map((name) => {
-//   if (name === "kamakiri") {
-//     return name;
-//   } else {
-//     return `${name}さん`;
-//   }
-// });
+  // button(完了)タグを生成
+  const completeButton = document.createElement("button");
+  completeButton.innerText = "完了";
+  completeButton.addEventListener("click", ()=>{
+    // 押された完了ボタンの親divを未完了リストから削除
+    deleteFromCompleteButton(completeButton.parentNode);
 
-// console.log(newNumArr3);
+    //完了リストに追加
+    const addTarget = completeButton.parentNode;
 
-/**
- * 三項演算子
- */
+    //TODO内容のテキストの取得
+    const text = addTarget.firstElementChild.innerText;
 
-// ある条件? 条件がtrueの時: 条件がfalseのとき
-// const val1 = 1 > 0 ? "trueです" : "falseです";
-// console.log(val1);
+    //div以下を初期化
+    addTarget.textContent = null;
+    
+    // liを生成
+    const li = document.createElement("li");
+    li.innerText = text;
 
-// const num = 13000;
-// console.log(num.toLocaleString());
-// console.log(typeof num);
+    // 戻るボタン
+    const backButton = document.createElement("button")
+    backButton.innerText = "戻す";
 
-// const formattedNum =
-//   typeof num === "number" ? num.toLocaleString() : "数値を入力してください。";
-// console.log(formattedNum);
+    // 
+    // backButtonにイベントを追加
+    backButton.addEventListener("click",()=>{
+      const backTarget = backButton.parentNode;
+      const text = backTarget.firstChild.innerText;
+     
+      // 削除
+      document.getElementById("complete-list").removeChild(backTarget);
+      creteIncompleteList(text);
+    })
 
-// const checkSum = (num1, num2) => {
-//   return num1 + num2 > 100 ? "100を超えています" : "許容範囲です";
-// };
+    const IncompleteButton = document.createElement("button");
+    IncompleteButton.innerText ="削除";
+    // backButtonにイベントを追加
+    IncompleteButton.addEventListener("click",()=>{
+  
+      // 削除
+      document.getElementById("complete-list").removeChild(IncompleteButton.parentNode);
+      })
 
-// console.log(checkSum(50, 60));
+    // divタグの子要素に各要路を追加
+    addTarget.appendChild(li);
+    addTarget.appendChild(backButton);
+    addTarget.appendChild(IncompleteButton);
+    
+   
+    //完了のリストに追加
+    document.getElementById("complete-list").appendChild(addTarget);
+  })
 
-/**
- * 論理演算子の本当の意味を知ろう
- */
-// const flag1 = true;
-// const flag2 = true;
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "削除";
+  deleteButton.addEventListener("click", ()=>{
+    // 押された削除ボタンの親divを未完了リストから削除
+    deleteFromCompleteButton(deleteButton.parentNode);
 
-// if (flag1 || flag2) {
-//   console.log("1か2はtrueになります。");
-// }
+  })
 
-// if (flag1 && flag2) {
-//   console.log("1も2はtrueになります。");
-// }
+  div.appendChild(completeButton);
+  div.appendChild(deleteButton);
 
-// || は左側がfalseなら右側を返す
-// const num = null;
-// const fee = num || "金額未設定です";
-// console.log(fee);
 
-// // && は左側がtrueなら右側を返す
-// const num2 = null;
-// const fee2 = num2 && "何か設定されました";
-// console.log(fee2);
+};
+
+// 未完了リストから指定の要素を削除
+
+const deleteFromCompleteButton = (target)=>{
+  document.getElementById("imcomplete-list").removeChild(target);
+}
+
+document
+.getElementById("add-button")
+.addEventListener("click", () => onClickAdd());
